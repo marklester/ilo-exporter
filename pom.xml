@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>icecodesoftware</groupId>
+	<artifactId>ilo-exporter</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>ilo-exporter</name>
+	<description>ilo-prom-metrics</description>
+	<properties>
+		<jackson.version>2.9.8</jackson.version>
+		<jib.version>1.0.2</jib.version>
+		<prom.version>0.6.0</prom.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.prometheus</groupId>
+			<artifactId>simpleclient</artifactId>
+			<version>${prom.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.prometheus</groupId>
+			<artifactId>simpleclient_httpserver</artifactId>
+			<version>${prom.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>27.1-jre</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>fluent-hc</artifactId>
+			<version>4.5.7</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+				<configuration>
+					<release>11</release>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>${jib.version}</version>
+				<configuration>
+					<to>
+						<image>docker.io/starfusionmz/${project.name}</image>
+					</to>
+				</configuration>
+				<!-- <executions> -->
+				<!-- <execution> -->
+				<!-- <phase>package</phase> -->
+				<!-- <goals> -->
+				<!-- <goal>build</goal> -->
+				<!-- </goals> -->
+				<!-- </execution> -->
+				<!-- </executions> -->
+			</plugin>
+		</plugins>
+	</build>
+</project>
