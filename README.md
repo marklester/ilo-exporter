@@ -27,4 +27,4 @@ The exporter is configured via environment variables:
 |ilo.username| username to talk to ilo|
 |ilo.password| password used to login into ilo|
 |ilo.hosts|comma separated list of ilo hosts|
-|ilo.cache.refresh|how often the ilo cache should be refreshed. default is 30 seconds|
+|ilo.cache.refresh|how often the ilo cache should be refreshed. default is (PT30S)30 seconds defined in iso8601 duration|
