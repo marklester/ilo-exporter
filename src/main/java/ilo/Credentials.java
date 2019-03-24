@@ -2,8 +2,8 @@ package ilo;
 
 public class Credentials {
 	public static Credentials fromEnvironment() {
-		String username = System.getenv("ilo.username");
-		String password = System.getenv("ilo.password");
+		String username = System.getenv(Environment.USERNAME);
+		String password = System.getenv(Environment.PASSWORD);
 		return new Credentials(username, password);
 	}
 
@@ -11,7 +11,6 @@ public class Credentials {
 	private String password;
 
 	public Credentials(String username, String password) {
-		super();
 		this.username = username;
 		this.password = password;
 	}
@@ -30,5 +29,18 @@ public class Credentials {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getPasswordMask() {
+		if (password != null) {
+			return password.replaceAll(".{1}", "*");
+		}
+		return password;
+	}
+
+	@Override
+	public String toString() {
+
+		return "Credentials [username=" + username + ", password=" + getPasswordMask() + "]";
 	}
 }
