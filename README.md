@@ -17,7 +17,7 @@ This includes:
  
  kubernetes:
  
-``` kubectl apply -f ilo-exporter.yml ```
+``` kubectl apply -f 	iloexporter-deployment.yaml ```
 
 The exporter is configured via environment variables:
 
