@@ -28,3 +28,6 @@ The exporter is configured via environment variables:
 |ilo.password| password used to login into ilo|
 |ilo.hosts|comma separated list of ilo hosts|
 |ilo.cache.refresh|how often the ilo cache should be refreshed. default is (PT30S)30 seconds defined in iso8601 duration|
+
+Example Usage:
+![ilo-metrics](https://user-images.githubusercontent.com/718117/54949540-b587e380-4f15-11e9-8725-2062f491e5b4.jpg)
