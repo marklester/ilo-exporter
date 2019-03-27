@@ -1,6 +1,6 @@
 # ilo-exporter
-This is HP Ilo Exporter for promethesus
-This uses the rest api provided by the ilo on HP servers to expose metrics the node exporter does not.
+A Prometheus Exporter used to export HP ILO metrics 
+This uses the rest api provided by the ILO on HP servers to expose metrics the node exporter does not.
 This includes:
  * Power Reading
  * Fan speeds in percentages
