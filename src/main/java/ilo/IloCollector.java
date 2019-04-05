@@ -13,7 +13,9 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+import ilo.model.ArrayController;
 import ilo.model.ChassisNode;
+import ilo.model.DiskNode;
 import ilo.model.FanNode;
 import ilo.model.TemperatureNode;
 import io.prometheus.client.Collector;
@@ -26,7 +28,7 @@ public class IloCollector extends Collector {
 
 	public IloCollector() {
 		Credentials creds = Credentials.fromEnvironment();
-		Preconditions.checkNotNull(System.getenv("ilo.hosts"),"ilo.hosts environment variable is not set");
+		Preconditions.checkNotNull(System.getenv("ilo.hosts"), "ilo.hosts environment variable is not set");
 		List<String> servers = Splitter.on(",").omitEmptyStrings().splitToList(System.getenv("ilo.hosts"));
 		clients = servers.stream().map(s -> new IloHttpClient(creds, s)).collect(Collectors.toList());
 		initCache();
@@ -56,6 +58,8 @@ public class IloCollector extends Collector {
 				Arrays.asList("hostname", "fan"));
 		GaugeMetricFamily tempSamples = new GaugeMetricFamily("ilo_chassis_temp", "tempurature (C)",
 				Arrays.asList("hostname", "temp"));
+		GaugeMetricFamily diskSamples = new GaugeMetricFamily("ilo_disk_status", "status of disks",
+				Arrays.asList("hostname", "container_port", "box", "bay", "status","state", "reason"));
 		for (IloHttpClient client : clients) {
 			ChassisNode node;
 			try {
@@ -68,6 +72,20 @@ public class IloCollector extends Collector {
 				for (TemperatureNode tempNode : node.getThermalNode().getTempuratures()) {
 					tempSamples.addMetric(Arrays.asList(hostname, tempNode.getLabel()), tempNode.getValue());
 				}
+				for (ArrayController array : node.getSystemNode().getStorageNode().getArrays()) {
+					for (DiskNode disk : array.getDiskDrives()) {
+						var health = disk.getHealth();
+						double statusValue = health.getState().equals("Enabled") ? 1.0 : 0.0;
+
+						var location = disk.getLocation();
+						var port = location.getControllerPort();
+						var box = location.getBox();
+						var bay = location.getBay();
+						diskSamples.addMetric(
+								Arrays.asList(hostname, port, box, bay, health.getStatus(), health.getState(),health.getReason()),
+								statusValue);
+					}
+				}
 			} catch (ExecutionException e) {
 				e.printStackTrace();
 			}
@@ -76,6 +94,7 @@ public class IloCollector extends Collector {
 		samples.add(powerSamples);
 		samples.add(fanSamples);
 		samples.add(tempSamples);
+		samples.add(diskSamples);
 		return samples;
 	}
 

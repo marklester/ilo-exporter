@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import ilo.model.ChassisNode;
 import ilo.model.PowerNode;
+import ilo.model.StorageNode;
 import ilo.model.SystemNode;
 import ilo.model.ThermalNode;
 
@@ -41,6 +42,7 @@ public class IloHttpClient {
 		this.ip = ip;
 		String base = String.format("https://%s/redfish/v1/", ip);
 		system = URI.create(base + "systems/1/");
+
 		chassis = URI.create(base + "chassis/1/");
 		thermal = URI.create(chassis + "thermal/");
 		power = URI.create(chassis + "power/");
@@ -69,23 +71,27 @@ public class IloHttpClient {
 		}
 
 	}
-
+	
+	public URI getNodeUri() {
+		return URI.create("https://"+ip);
+	}
+	
 	public ChassisNode getChassisNode() {
 		var req = HttpRequest.newBuilder().header("Authorization", basicAuth(creds)).uri(chassis).build();
 		JsonNode node = getJson(req);
-		return new ChassisNode(node, getThermalNode(), getPowerNode(),getSystemNode());
+		return new ChassisNode(node, getThermalNode(), getPowerNode(), getSystemNode());
 	}
 
-	JsonNode getJson(HttpRequest request) {
+	public JsonNode getJson(HttpRequest request) {
 
 		try {
 			var response = client.send(request, BodyHandlers.ofString());
 			if (response.statusCode() != 200) {
-				throw new IllegalStateException("could not retreive json: " + response.body());
+				throw new IllegalStateException("could not retrieve json: " + response.toString());
 			}
 			return mapper.readTree(response.body());
 		} catch (IOException | InterruptedException e) {
-			throw new IllegalStateException("could not retreive json", e);
+			throw new IllegalStateException("could not retrieve json", e);
 		}
 	}
 
@@ -101,11 +107,20 @@ public class IloHttpClient {
 		JsonNode node = getJson(req);
 		return new ThermalNode(node);
 	}
-	
+
 	public SystemNode getSystemNode() {
 		var req = HttpRequest.newBuilder().header("Authorization", basicAuth(creds)).uri(system).build();
 		JsonNode node = getJson(req);
-		return new SystemNode(node);
+		return new SystemNode(node,getStorageNode());
+	}
+	
+	public HttpRequest.Builder reqBuilder(){
+		return HttpRequest.newBuilder().header("Authorization", basicAuth(creds));
+	}
+	
+	public StorageNode getStorageNode() {
+		StorageClient client = new StorageClient(this);
+		return client.getStorageNode();
 	}
 
 	private String basicAuth(Credentials creds) {
@@ -129,6 +144,8 @@ public class IloHttpClient {
 		IloHttpClient other = (IloHttpClient) obj;
 		return Objects.equals(ip, other.ip);
 	}
-	
-	
+
+	public URI getSystemUri() {
+		return system;
+	}
 }
