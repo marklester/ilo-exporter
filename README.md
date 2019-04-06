@@ -33,7 +33,7 @@ The exporter is configured via environment variables:
 | ---------- | ------------- |
 |ilo.username| username to talk to ilo|
 |ilo.password| password used to login into ilo|
-|ilo.hosts|comma separated list of ilo hosts|
+|ilo.hosts|comma separated list of ilo hosts. Supports sequential expansion for ipv4 addressess e.g. 192.168.1.1-3|
 |ilo.port| port to listen on for metrics http server. defaults to 9416|
 |ilo.cache.refresh|how often the ilo cache should be refreshed. default is (PT30S)30 seconds defined in iso8601 duration|
 
