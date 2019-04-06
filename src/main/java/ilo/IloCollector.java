@@ -8,7 +8,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Splitter;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -23,13 +22,14 @@ import io.prometheus.client.GaugeMetricFamily;
 
 public class IloCollector extends Collector {
 	private List<IloHttpClient> clients;
-	LoadingCache<IloHttpClient, ChassisNode> nodeCache;
+	private LoadingCache<IloHttpClient, ChassisNode> nodeCache;
 	private Duration refreshRate;
 
 	public IloCollector() {
 		Credentials creds = Credentials.fromEnvironment();
-		Preconditions.checkNotNull(System.getenv("ilo.hosts"), "ilo.hosts environment variable is not set");
-		List<String> servers = Splitter.on(",").omitEmptyStrings().splitToList(System.getenv("ilo.hosts"));
+		String hosts = System.getenv("ilo.hosts");
+		Preconditions.checkNotNull(hosts, "ilo.hosts environment variable is not set");
+		var servers = new HostParser().parseHosts(hosts);
 		clients = servers.stream().map(s -> new IloHttpClient(creds, s)).collect(Collectors.toList());
 		initCache();
 		System.out.println("Refresh rate set to: " + refreshRate);
@@ -59,7 +59,7 @@ public class IloCollector extends Collector {
 		GaugeMetricFamily tempSamples = new GaugeMetricFamily("ilo_chassis_temp", "tempurature (C)",
 				Arrays.asList("hostname", "temp"));
 		GaugeMetricFamily diskSamples = new GaugeMetricFamily("ilo_disk_status", "status of disks",
-				Arrays.asList("hostname", "container_port", "box", "bay", "status","state", "reason"));
+				Arrays.asList("hostname", "container_port", "box", "bay", "status", "state", "reason"));
 		for (IloHttpClient client : clients) {
 			ChassisNode node;
 			try {
@@ -81,9 +81,8 @@ public class IloCollector extends Collector {
 						var port = location.getControllerPort();
 						var box = location.getBox();
 						var bay = location.getBay();
-						diskSamples.addMetric(
-								Arrays.asList(hostname, port, box, bay, health.getStatus(), health.getState(),health.getReason()),
-								statusValue);
+						diskSamples.addMetric(Arrays.asList(hostname, port, box, bay, health.getStatus(),
+								health.getState(), health.getReason()), statusValue);
 					}
 				}
 			} catch (ExecutionException e) {

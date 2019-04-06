@@ -1,0 +1,68 @@
+ {
+	"@odata.context": "/redfish/v1/$metadata#Systems/Members/1/SmartStorage/ArrayControllers/Members/0/DiskDrives",
+	"@odata.id": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/",
+	"@odata.type": "#HpSmartStorageDiskDriveCollection.HpSmartStorageDiskDriveCollection",
+	"Description": "HP Smart Storage Disk Drives View",
+	"MemberType": "HpSmartStorageDiskDrive.1",
+	"Members": [
+		{
+			"@odata.id": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/0/"
+		},
+		{
+			"@odata.id": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/1/"
+		},
+		{
+			"@odata.id": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/2/"
+		},
+		{
+			"@odata.id": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/3/"
+		},
+		{
+			"@odata.id": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/4/"
+		},
+		{
+			"@odata.id": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/5/"
+		},
+		{
+			"@odata.id": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/6/"
+		},
+		{
+			"@odata.id": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/7/"
+		}
+	],
+	"Members@odata.count": 8,
+	"Name": "HpSmartStorageDiskDrives",
+	"Total": 8,
+	"Type": "Collection.1.0.0",
+	"links": {
+		"Member": [
+			{
+				"href": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/0/"
+			},
+			{
+				"href": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/1/"
+			},
+			{
+				"href": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/2/"
+			},
+			{
+				"href": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/3/"
+			},
+			{
+				"href": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/4/"
+			},
+			{
+				"href": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/5/"
+			},
+			{
+				"href": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/6/"
+			},
+			{
+				"href": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/7/"
+			}
+		],
+		"self": {
+			"href": "/redfish/v1/Systems/1/SmartStorage/ArrayControllers/0/DiskDrives/"
+		}
+	}
+}

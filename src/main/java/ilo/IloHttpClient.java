@@ -7,6 +7,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
 import java.util.Base64;
 import java.util.Objects;
 import java.util.Properties;
@@ -19,6 +20,9 @@ import javax.net.ssl.X509TrustManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 import ilo.model.ChassisNode;
 import ilo.model.PowerNode;
@@ -36,10 +40,12 @@ public class IloHttpClient {
 	private URI system;
 	private Credentials creds;
 	private String ip;
+	LoadingCache<HttpRequest, JsonNode> responseCache;
 
 	public IloHttpClient(Credentials creds, String ip) throws IllegalStateException {
 		this.creds = creds;
 		this.ip = ip;
+		initCache();
 		String base = String.format("https://%s/redfish/v1/", ip);
 		system = URI.create(base + "systems/1/");
 
@@ -60,9 +66,9 @@ public class IloHttpClient {
 			public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
 			}
 		} };
-		SSLContext sc;
+
 		try {
-			sc = SSLContext.getInstance("SSL");
+			SSLContext sc = SSLContext.getInstance("SSL");
 			sc.init(null, trustAllCerts, new java.security.SecureRandom());
 			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 			client = HttpClient.newBuilder().sslContext(sc).build();
@@ -71,11 +77,24 @@ public class IloHttpClient {
 		}
 
 	}
-	
-	public URI getNodeUri() {
-		return URI.create("https://"+ip);
+
+	public void initCache() {
+		var refreshRate = Duration.parse(System.getenv().getOrDefault("refresh.rate", "PT30s"));
+		this.responseCache = CacheBuilder.newBuilder().refreshAfterWrite(refreshRate)
+				.build(new CacheLoader<HttpRequest, JsonNode>() {
+
+					@Override
+					public JsonNode load(HttpRequest key) throws Exception {
+						return getJsonInternal(key);
+					}
+
+				});
 	}
-	
+
+	public URI getNodeUri() {
+		return URI.create("https://" + ip);
+	}
+
 	public ChassisNode getChassisNode() {
 		var req = HttpRequest.newBuilder().header("Authorization", basicAuth(creds)).uri(chassis).build();
 		JsonNode node = getJson(req);
@@ -83,6 +102,10 @@ public class IloHttpClient {
 	}
 
 	public JsonNode getJson(HttpRequest request) {
+		return responseCache.getUnchecked(request);
+	}
+
+	private JsonNode getJsonInternal(HttpRequest request) {
 
 		try {
 			var response = client.send(request, BodyHandlers.ofString());
@@ -111,13 +134,13 @@ public class IloHttpClient {
 	public SystemNode getSystemNode() {
 		var req = HttpRequest.newBuilder().header("Authorization", basicAuth(creds)).uri(system).build();
 		JsonNode node = getJson(req);
-		return new SystemNode(node,getStorageNode());
+		return new SystemNode(node, getStorageNode());
 	}
-	
-	public HttpRequest.Builder reqBuilder(){
+
+	public HttpRequest.Builder reqBuilder() {
 		return HttpRequest.newBuilder().header("Authorization", basicAuth(creds));
 	}
-	
+
 	public StorageNode getStorageNode() {
 		StorageClient client = new StorageClient(this);
 		return client.getStorageNode();
