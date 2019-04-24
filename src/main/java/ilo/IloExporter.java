@@ -10,6 +10,6 @@ public class IloExporter {
 	public static void main(String[] args) throws IOException {
 		String port = System.getenv().getOrDefault("ilo.port", "9416");
 		System.out.println("Starting server on port: " + port);
-		new HTTPServer(Integer.parseInt(port));	}
-
+		new HTTPServer(Integer.parseInt(port));
+	}
 }

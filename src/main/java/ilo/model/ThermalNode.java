@@ -1,6 +1,6 @@
 package ilo.model;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,7 +13,7 @@ public class ThermalNode {
 	}
 
 	public Set<FanNode> getFans() {
-		Set<FanNode> fans = new HashSet<FanNode>();
+		Set<FanNode> fans = new LinkedHashSet<FanNode>();
 		for (JsonNode node : node.get("Fans")) {
 			fans.add(new FanNode(node));
 		}
@@ -21,7 +21,7 @@ public class ThermalNode {
 	}
 	
 	public Set<TemperatureNode> getTempuratures() {
-		var temps = new HashSet<TemperatureNode>();
+		var temps = new LinkedHashSet<TemperatureNode>();
 		for (JsonNode node : node.get("Temperatures")) {
 			temps.add(new TemperatureNode(node));
 		}

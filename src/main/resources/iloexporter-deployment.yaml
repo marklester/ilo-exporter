@@ -29,7 +29,7 @@ spec:
               name: ilo-credentials
               key: password
         - name: ilo.hosts
-          value: "192.168.2.2,192.168.2.3,192.168.2.4"
+          value: "192.168.2.2-4"
 ---
 apiVersion: v1
 kind: Service
@@ -62,4 +62,4 @@ spec:
       - monitoring
   endpoints:
   - port: metrics
-    interval: 15s
+    interval: 30s

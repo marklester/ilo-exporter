@@ -56,7 +56,7 @@ public class IloCollector extends Collector {
 				Arrays.asList("hostname"));
 		GaugeMetricFamily fanSamples = new GaugeMetricFamily("ilo_chassis_fan_percent", "percent fans",
 				Arrays.asList("hostname", "fan"));
-		GaugeMetricFamily tempSamples = new GaugeMetricFamily("ilo_chassis_temp", "tempurature (C)",
+		GaugeMetricFamily tempSamples = new GaugeMetricFamily("ilo_chassis_temp", "temperature (C)",
 				Arrays.asList("hostname", "temp"));
 		GaugeMetricFamily diskSamples = new GaugeMetricFamily("ilo_disk_status", "status of disks",
 				Arrays.asList("hostname", "container_port", "box", "bay", "status", "state", "reason"));

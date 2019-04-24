@@ -1,6 +1,11 @@
 package ilo;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 public class Credentials {
+	private static ObjectMapper MAPPER = new ObjectMapper();
+	
 	public static Credentials fromEnvironment() {
 		String username = System.getenv(Environment.USERNAME);
 		String password = System.getenv(Environment.PASSWORD);
@@ -40,7 +45,13 @@ public class Credentials {
 
 	@Override
 	public String toString() {
-
 		return "Credentials [username=" + username + ", password=" + getPasswordMask() + "]";
+	}
+	
+	public String toJson() {
+		ObjectNode node = MAPPER.createObjectNode();
+		node.put("UserName", username);
+		node.put("Password", password);
+		return node.toString();		
 	}
 }

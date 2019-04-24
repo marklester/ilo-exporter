@@ -9,7 +9,7 @@
 	<description>ilo-prom-metrics</description>
 	<properties>
 		<jackson.version>2.9.8</jackson.version>
-		<jib.version>1.0.2</jib.version>
+		<jib.version>1.1.2</jib.version>
 		<prom.version>0.6.0</prom.version>
 	</properties>
 	<dependencies>
@@ -33,7 +33,6 @@
 			<artifactId>guava</artifactId>
 			<version>27.1-jre</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
@@ -69,25 +68,25 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- <plugin> -->
-			<!-- <groupId>org.apache.maven.plugins</groupId> -->
-			<!-- <artifactId>maven-shade-plugin</artifactId> -->
-			<!-- <version>3.2.1</version> -->
-			<!-- <configuration> -->
-			<!-- </configuration> -->
-			<!-- <executions> -->
-			<!-- <execution> -->
-			<!-- <phase>package</phase> -->
-			<!-- <goals> -->
-			<!-- <goal>shade</goal> -->
-			<!-- </goals> -->
-			<!-- </execution> -->
-			<!-- </executions> -->
-			<!-- </plugin> -->
+	<!-- <plugin> -->
+	<!-- <groupId>org.apache.maven.plugins</groupId> -->
+	<!-- <artifactId>maven-shade-plugin</artifactId> -->
+	<!-- <version>3.2.1</version> -->
+	<!-- <configuration> -->
+	<!-- </configuration> -->
+	<!-- <executions> -->
+	<!-- <execution> -->
+	<!-- <phase>package</phase> -->
+	<!-- <goals> -->
+	<!-- <goal>shade</goal> -->
+	<!-- </goals> -->
+	<!-- </execution> -->
+	<!-- </executions> -->
+	<!-- </plugin> -->
 			<!-- <plugin> -->
 			<!-- <groupId>com.oracle.substratevm</groupId> -->
 			<!-- <artifactId>native-image-maven-plugin</artifactId> -->
-			<!-- <version>1.0.0-rc14</version> -->
+			<!-- <version>1.0.0-rc15</version> -->
 			<!-- <configuration> -->
 			<!-- <mainClass>ilo.IloExporter</mainClass> -->
 			<!-- </configuration> -->
