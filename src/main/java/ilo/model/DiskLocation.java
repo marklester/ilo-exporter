@@ -1,10 +1,12 @@
 package ilo.model;
 
+import java.util.List;
+
 import com.google.common.base.Splitter;
 
 public class DiskLocation {
 	public static DiskLocation parseLocationString(String locationString) {
-		var parts = Splitter.on(":").splitToList(locationString);
+		List<String> parts = Splitter.on(":").splitToList(locationString);
 		return new DiskLocation(parts.get(0), parts.get(1), parts.get(2));
 	}
 

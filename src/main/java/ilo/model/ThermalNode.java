@@ -21,7 +21,7 @@ public class ThermalNode {
 	}
 	
 	public Set<TemperatureNode> getTempuratures() {
-		var temps = new LinkedHashSet<TemperatureNode>();
+		LinkedHashSet<TemperatureNode> temps = new LinkedHashSet<TemperatureNode>();
 		for (JsonNode node : node.get("Temperatures")) {
 			temps.add(new TemperatureNode(node));
 		}

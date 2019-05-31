@@ -14,7 +14,7 @@ public class DiskNode {
 		String state = diskJson.get("Status").get("State").asText();
 		String reason = diskJson.get("DiskDriveStatusReasons").get(0).asText();
 		diskStatus = new DiskStatus(status,state, reason);
-		var locationString= diskJson.get("Location").asText();
+		String locationString = diskJson.get("Location").asText();
 		location = DiskLocation.parseLocationString(locationString);
 	}
 

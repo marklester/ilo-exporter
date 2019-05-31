@@ -14,7 +14,9 @@ import com.google.common.cache.LoadingCache;
 
 import ilo.model.ArrayController;
 import ilo.model.ChassisNode;
+import ilo.model.DiskLocation;
 import ilo.model.DiskNode;
+import ilo.model.DiskStatus;
 import ilo.model.FanNode;
 import ilo.model.TemperatureNode;
 import io.prometheus.client.Collector;
@@ -29,7 +31,7 @@ public class IloCollector extends Collector {
 		Credentials creds = Credentials.fromEnvironment();
 		String hosts = System.getenv("ilo.hosts");
 		Preconditions.checkNotNull(hosts, "ilo.hosts environment variable is not set");
-		var servers = new HostParser().parseHosts(hosts);
+		List<String> servers = new HostParser().parseHosts(hosts);
 		clients = servers.stream().map(s -> new IloHttpClient(creds, s)).collect(Collectors.toList());
 		initCache();
 		System.out.println("Refresh rate set to: " + refreshRate);
@@ -74,13 +76,13 @@ public class IloCollector extends Collector {
 				}
 				for (ArrayController array : node.getSystemNode().getStorageNode().getArrays()) {
 					for (DiskNode disk : array.getDiskDrives()) {
-						var health = disk.getHealth();
+						DiskStatus health = disk.getHealth();
 						double statusValue = health.getState().equals("Enabled") ? 1.0 : 0.0;
 
-						var location = disk.getLocation();
-						var port = location.getControllerPort();
-						var box = location.getBox();
-						var bay = location.getBay();
+						DiskLocation location = disk.getLocation();
+						String port = location.getControllerPort();
+						String box = location.getBox();
+						String bay = location.getBay();
 						diskSamples.addMetric(Arrays.asList(hostname, port, box, bay, health.getStatus(),
 								health.getState(), health.getReason()), statusValue);
 					}

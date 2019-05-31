@@ -32,6 +32,12 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>27.1-jre</version>
+
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>3.12.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -47,46 +53,46 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.0</version>
 				<configuration>
-					<release>11</release>
+					<release>8</release>
 				</configuration>
 			</plugin>
+			<!-- <plugin> -->
+			<!-- <groupId>com.google.cloud.tools</groupId> -->
+			<!-- <artifactId>jib-maven-plugin</artifactId> -->
+			<!-- <version>${jib.version}</version> -->
+			<!-- <configuration> -->
+			<!-- <to> -->
+			<!-- <image>starfusionmz/${project.name}</image> -->
+			<!-- </to> -->
+			<!-- </configuration> -->
+			<!-- <executions> -->
+			<!-- <execution> -->
+			<!-- <phase>package</phase> -->
+			<!-- <goals> -->
+			<!-- <goal>build</goal> -->
+			<!-- </goals> -->
+			<!-- </execution> -->
+			<!-- </executions> -->
+	<!-- </plugin> -->
 			<plugin>
-				<groupId>com.google.cloud.tools</groupId>
-				<artifactId>jib-maven-plugin</artifactId>
-				<version>${jib.version}</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.1</version>
 				<configuration>
-					<to>
-						<image>starfusionmz/${project.name}</image>
-					</to>
 				</configuration>
 				<executions>
 					<execution>
 						<phase>package</phase>
 						<goals>
-							<goal>build</goal>
+							<goal>shade</goal>
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
-	<!-- <plugin> -->
-	<!-- <groupId>org.apache.maven.plugins</groupId> -->
-	<!-- <artifactId>maven-shade-plugin</artifactId> -->
-	<!-- <version>3.2.1</version> -->
-	<!-- <configuration> -->
-	<!-- </configuration> -->
-	<!-- <executions> -->
-	<!-- <execution> -->
-	<!-- <phase>package</phase> -->
-	<!-- <goals> -->
-	<!-- <goal>shade</goal> -->
-	<!-- </goals> -->
-	<!-- </execution> -->
-	<!-- </executions> -->
-	<!-- </plugin> -->
 			<!-- <plugin> -->
 			<!-- <groupId>com.oracle.substratevm</groupId> -->
 			<!-- <artifactId>native-image-maven-plugin</artifactId> -->
-			<!-- <version>1.0.0-rc15</version> -->
+			<!-- <version>19.0.0</version> -->
 			<!-- <configuration> -->
 			<!-- <mainClass>ilo.IloExporter</mainClass> -->
 			<!-- </configuration> -->

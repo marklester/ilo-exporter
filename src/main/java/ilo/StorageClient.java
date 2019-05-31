@@ -18,23 +18,23 @@ public class StorageClient {
 	}
 
 	public List<DiskNode> getDiskDrives(JsonNode disksJson) {
-		var set = new ArrayList<DiskNode>();
+		ArrayList<DiskNode> set = new ArrayList<DiskNode>();
 		for (JsonNode member : disksJson.get("links").get("Member")) {
-			var link = member.get("href").asText();
-			var diskUri = URI.create(client.getNodeUri().toString() + link);
-			var diskJson = client.getJson(client.session().uri(diskUri).build());
+			String link = member.get("href").asText();
+			URI diskUri = URI.create(client.getNodeUri().toString() + link);
+			JsonNode diskJson = client.getJson(client.session(diskUri));
 			set.add(new DiskNode(diskJson));
 		}
 		return set;
 	}
 
 	public List<ArrayController> getArrays(JsonNode arrayControllers) {
-		var arrays = new ArrayList<ArrayController>();
+		ArrayList<ArrayController> arrays = new ArrayList<ArrayController>();
 		for (JsonNode arrayMember : arrayControllers.get("links").get("Member")) {
-			String arrayLink = arrayMember.get("href").asText();			
-			var disksUri = URI.create(client.getNodeUri().toString() + arrayLink + "diskdrives/");
-			//System.out.println("getting disks for "+disksUri);
-			var disksJson = client.getJson(client.session().uri(disksUri).build());
+			String arrayLink = arrayMember.get("href").asText();
+			URI disksUri = URI.create(client.getNodeUri().toString() + arrayLink + "diskdrives/");
+			// System.out.println("getting disks for "+disksUri);
+			JsonNode disksJson = client.getJson(client.session(disksUri));
 			arrays.add(new ArrayController(getDiskDrives(disksJson)));
 		}
 		return arrays;
@@ -42,7 +42,7 @@ public class StorageClient {
 
 	public StorageNode getStorageNode() {
 		URI arrayControllersUri = URI.create(client.getSystemUri().toString() + "SmartStorage/ArrayControllers/");
-		JsonNode arraysJson = client.getJson(client.session().uri(arrayControllersUri).build());
+		JsonNode arraysJson = client.getJson(client.session(arrayControllersUri));
 		return new StorageNode(arraysJson, getArrays(arraysJson));
 	}
 }
