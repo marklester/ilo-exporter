@@ -36,6 +36,8 @@ public class IloHttpClient {
 	private String sessionToken;
 	private LoadingCache<HttpRequest, JsonNode> responseCache;
 
+	private URI sessionUrl;
+
 	public IloHttpClient(Credentials creds, String ip) throws IllegalStateException {
 		this.creds = creds;
 		this.ip = ip;
@@ -47,7 +49,7 @@ public class IloHttpClient {
 		thermal = URI.create(chassis + "thermal/");
 		power = URI.create(chassis + "power/");
 		client = HttpClientBuilder.insecure();
-		var sessionUrl = URI.create(base + "SessionService/Sessions/");
+		sessionUrl = URI.create(base + "SessionService/Sessions/");
 		sessionToken = createSession(sessionUrl);
 	}
 
@@ -82,9 +84,13 @@ public class IloHttpClient {
 
 		try {
 			var response = client.send(request, BodyHandlers.ofString());
+			if(response.statusCode()==401) {
+				sessionToken = createSession(sessionUrl);
+			}
 			if (response.statusCode() != 200) {
 				throw new IllegalStateException("could not retrieve json: " + response.toString());
 			}
+			
 			return mapper.readTree(response.body());
 		} catch (IOException | InterruptedException e) {
 			throw new IllegalStateException("could not retrieve json", e);
